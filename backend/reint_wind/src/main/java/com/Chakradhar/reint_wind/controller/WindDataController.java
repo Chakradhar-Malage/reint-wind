@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import com.Chakradhar.reint_wind.service.ForecastProcessingService;
 
 import reactor.core.publisher.Mono;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class WindDataController {
