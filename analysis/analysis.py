@@ -2,33 +2,55 @@ import requests
 import pandas as pd
 import numpy as np
 
-# Backend API
-API_URL = "http://localhost:8081/api/wind-data?horizon=4"
+API_URL = "http://localhost:8081/api/wind-error?horizon=4"
 
-# Fetch data
-response = requests.get(API_URL)
-data = response.json()
 
-# Convert to DataFrame
-df = pd.DataFrame(data)
+def fetch_data():
+    print("Fetching wind error data from API...")
 
-# Convert time column
-df["time"] = pd.to_datetime(df["time"])
+    response = requests.get(API_URL)
 
-# Calculate errors
-df["error"] = df["actual"] - df["forecast"]
-df["abs_error"] = np.abs(df["error"])
-df["squared_error"] = df["error"] ** 2
+    if response.status_code != 200:
+        raise Exception("Failed to fetch API data")
 
-# Metrics
-MAE = df["abs_error"].mean()
-RMSE = np.sqrt(df["squared_error"].mean())
+    data = response.json()
 
-print("Wind Forecast Accuracy Metrics")
-print("--------------------------------")
-print(f"MAE  (Mean Absolute Error): {MAE:.2f} MW")
-print(f"RMSE (Root Mean Squared Error): {RMSE:.2f} MW")
+    df = pd.DataFrame(data)
 
-# Show sample rows
-print("\nSample Data:")
-print(df.head())
+    return df
+
+
+def calculate_metrics(df):
+
+    actual = df["actual"]
+    forecast = df["forecast"]
+
+    error = actual - forecast
+
+    mae = np.mean(np.abs(error))
+
+    rmse = np.sqrt(np.mean(error**2))
+
+    mape = np.mean(np.abs(error / actual)) * 100
+
+    return mae, rmse, mape
+
+
+def main():
+
+    df = fetch_data()
+
+    mae, rmse, mape = calculate_metrics(df)
+
+    print("\nForecast Accuracy Report")
+    print("----------------------------")
+
+    print(f"MAE  : {mae:.2f} MW")
+    print(f"RMSE : {rmse:.2f} MW")
+    print(f"MAPE : {mape:.2f} %")
+
+    print("\nTotal Data Points:", len(df))
+
+    df.to_csv("wind_forecast_analysis.csv", index=False)
+if __name__ == "__main__":
+    main()
