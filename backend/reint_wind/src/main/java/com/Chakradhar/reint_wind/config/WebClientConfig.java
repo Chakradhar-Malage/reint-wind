@@ -12,7 +12,7 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder builder) {
         return builder
-                // Use the correct API domain
+                // API domain
                 .baseUrl("https://data.elexon.co.uk") 
                 // Force the server to return JSON everywhere
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)

@@ -18,8 +18,6 @@ import com.Chakradhar.reint_wind.service.ForecastProcessingService;
 
 import reactor.core.publisher.Mono;
 
-
-
 @RestController
 @RequestMapping("/api")
 public class WindDataController {
@@ -52,7 +50,9 @@ public class WindDataController {
                     System.out.println("Fetched " + actuals.size() + " actual records.");
                     System.out.println("Fetched " + forecasts.size() + " forecast records.");
                     List<WindDataResponse> response = new ArrayList<>();
-
+                    if (!forecasts.isEmpty()) {
+                        System.out.println("First forecast date is: " + forecasts.get(0).getStartTime());
+                    }
                     for (ActualGeneration actual : actuals) {
 
                         Double forecast = processingService.findBestForecast(

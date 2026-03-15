@@ -9,5 +9,4 @@ public class ReintWindApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ReintWindApplication.class, args);
 	}
-
 }
